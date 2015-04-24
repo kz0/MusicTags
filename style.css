@@ -132,6 +132,7 @@ table.results-table tbody tr td.index {
 }
 table.results-table tbody tr td.artwork {
 	height: 200px;
+    position: relative;
 }
 table.results-table tbody tr td.description {
 	text-align: left;
@@ -174,4 +175,53 @@ table.results-table tbody tr td ul li .trackCensoredName{
 }
 table.results-table tbody tr td ul li.releaseDate{
 	padding-top: 2px;
+}
+.play {
+    opacity: 0;
+    cursor: pointer;
+    left: 50%;
+    margin: -32px 0 0 -32px;
+    position: absolute;
+    top: 50%;
+    z-index: 10;
+    transition-property: opacity;
+    transition-duration: 0.3s;
+    outline: 0;
+}
+.play-icon {
+    background: url('http://cdn-files.deezer.com/images/compass/sprites/bootstrap-saff6d5b166.png') no-repeat;
+    left: 0;
+    position: absolute;
+    top: 0;
+    background-position: -64px -519px;
+    height: 64px;
+    width: 64px;
+}
+.play-bg {
+    background: url('http://cdn-files.deezer.com/images/compass/sprites/bootstrap-saff6d5b166.png') no-repeat;
+    display: block;
+    opacity: .6;
+    background-position: -61px -455px;
+    height: 64px;
+    width: 64px;
+    transition-property: opacity;
+    transition-duration: 0.15s;
+}
+.artwork:hover>.play {
+    opacity: 1;
+}
+.play.active {
+    opacity: 1;
+}
+.play:hover>.play-bg {
+    opacity: 1;
+}
+.play.active:hover>.play-icon {
+    background: url('img/player/bootstrap-saff6d5b166.png') no-repeat;
+    background-position: 0 -583px;
+    height: 64px;
+    width: 64px;
+}
+.play.active>.play-icon {
+    background: url('img/player/equalizer.2188ff9290655eeaf48b1b97ef8d7c9a.gif') 0 0;
 }

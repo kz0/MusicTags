@@ -157,11 +157,15 @@
           <tr class="table-row i<?php echo $i%2 ?>">
             <td class="artwork flexible-col">
               <?php if($is_song) { ?>
-              <audio class="player" tabindex="<?php echo $i ?>" preload="none" style="width:480px;">
+              <audio preload="none">
                 <source src="<?php echo $value->{'previewUrl'} ?>" type="audio/mp4" />
               </audio>
               <?php } ?>
-              <a class="artwork-play"><img alt="<?php echo $value->{'collectionCensoredName'} ?>, <?php echo $value->{'artistName'} ?>" class="artwork" tabindex="<?php echo $i ?>" src="<?php echo str_replace("100x100", "200x200", $value->{'artworkUrl100'}) ?>"></a>
+              <img alt="<?php echo $value->{'collectionCensoredName'} ?>, <?php echo $value->{'artistName'} ?>" class="artwork" src="<?php echo str_replace("100x100", "200x200", $value->{'artworkUrl100'}) ?>">
+                <span class="play" tabindex="<?php echo $i ?>">
+                    <span class="play-bg"></span>
+                    <span class="play-icon"></span>
+                </span>
             </td>
             <td class="description flexible-col">
               <ul class="list">
