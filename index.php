@@ -108,7 +108,7 @@
                     $url = 'https://api.spotify.com/v1/search?' . 'query=' . $term . '&type=' . $type . '&market=' . $country . '&limit=' . $limit;
                 } else {
                     if ($type == 'album') {
-                        $url = 'https://api.spotify.com/v1/' . $searchMode . '/' . $term . '/' . $type . 's';
+                        $url = 'https://api.spotify.com/v1/' . $searchMode . '/' . $term . '/' . $type . 's' . '?market=' . $country;
                     } else {
                         $url = 'https://api.spotify.com/v1/' . $searchMode . '/' . $term;
                     }
