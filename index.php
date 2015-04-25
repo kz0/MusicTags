@@ -149,29 +149,27 @@
                         $value = $parsed_json->tracks;
                         $value = $value->items;
                         foreach ($value as $key => $o) {
+                            if (isset($_GET['searchMode']) and $_GET['searchMode'] == 'id') {
+                                $json = file_get_contents($o->href);
+                                $r = json_decode($json);
+                                $o->releaseDate = $parsed_json->release_date;
+                            } else {
+                                $json = file_get_contents($o->album->href);
+                                $a = json_decode($json);
+                                $o->releaseDate = $a->release_date;
+                                $r = $o;
+                            }
                             $o->artwork = new stdClass();
                             $o->trackCensoredName = $o->name;
                             $o->trackViewUrl = $o->external_urls->spotify;
-                            if (isset($_GET['searchMode']) and $_GET['searchMode'] == 'id') {
-                                $o->collectionCensoredName = $parsed_json->name;
-                                $o->artistName = $parsed_json->artists[0]->name;
-                                $o->artistId = $parsed_json->artists[0]->id;
-                                $o->artworkUrl100 = $parsed_json->images[1]->url;
-                                $o->collectionId = $parsed_json->id;
-                                $o->artwork->{'64x64'} = $parsed_json->images[2]->url;
-                                $o->artwork->{'300x300'} = $parsed_json->images[1]->url;
-                                $o->artwork->{'640x640'} = $parsed_json->images[0]->url;
-                                $o->releaseDate = $parsed_json->release_date;
-                            } else {
-                                $o->collectionCensoredName = $o->album->name;
-                                $o->artistName = $o->artists[0]->name;
-                                $o->artistId = $o->artists[0]->id;
-                                $o->artworkUrl100 = $o->album->images[1]->url;
-                                $o->collectionId = $o->album->id;
-                                $o->artwork->{'64x64'} = $o->album->images[2]->url;
-                                $o->artwork->{'300x300'} = $o->album->images[1]->url;
-                                $o->artwork->{'640x640'} = $o->album->images[0]->url;
-                            }
+                            $o->collectionCensoredName = $r->album->name;
+                            $o->artistName = $r->artists[0]->name;
+                            $o->artistId = $r->artists[0]->id;
+                            $o->artworkUrl100 = $r->album->images[1]->url;
+                            $o->collectionId = $r->album->id;
+                            $o->artwork->{'64x64'} = $r->album->images[2]->url;
+                            $o->artwork->{'300x300'} = $r->album->images[1]->url;
+                            $o->artwork->{'640x640'} = $r->album->images[0]->url;
                             $o->discNumber = $o->disc_number;
                             $o->trackNumber = $o->track_number;
                             $o->trackTimeMillis = $o->duration_ms;
@@ -260,10 +258,9 @@
             </tbody>
         </table>
         <?php }
-        else {
-            echo '<h3 class="welcome_message">Enter an artist, an album or a song title to find the tags.</h3>';
-        }
-        ?>
+        else { ?>
+        <h3 class="welcome_message">Enter an artist, an album or a song title to find the tags.</h3>
+        <?php } ?>
         <script>
             $('.table-row').bind('inview', function(event, visible) {
                 if (visible) {
