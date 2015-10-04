@@ -1,14 +1,17 @@
 body {
     font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, Verdana, sans-serif;
-    font-size:0.9em;
-    text-align:center;
+    font-size: 0.9em;
+    text-align: center;
     padding: 0;
     margin: 0;
     color: rgba(255, 255, 255, 0.70);
     background-image: url(img/back.png);
-    background-repeat:no-repeat;
+    background-repeat: no-repeat;
     background-attachment: fixed;
-    background-size: 100%;
+    background-size: cover;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
     -moz-user-select: none;
     -webkit-user-select: none;
     -ms-user-select: none;
@@ -24,6 +27,11 @@ body {
 a {
     text-decoration: none;
 }
+a.title {
+    display: inline-block;
+    margin-top: 50px;
+    width: 435px;    
+}
 img {
     width: 200px;
     height: 200px;
@@ -33,7 +41,15 @@ h1 {
 	font-size: 2.8em;
 	font-weight: normal;
     color: rgba(255, 255, 255, 0.80);
-	margin: 50px;
+    margin: 0;
+}
+hr {
+    height: 2px;
+    width: 435px;
+    border: 0;
+    box-shadow: inset 0 4px 20px -7px rgba(255,255,255,1);
+    margin-top: 11px;
+    margin-bottom: 24px;
 }
 input[type="text"] {
     padding-left: 6px;
@@ -189,7 +205,7 @@ table.results-table tbody tr td ul li.releaseDate{
     outline: 0;
 }
 .play-icon {
-    background: url('http://cdn-files.deezer.com/images/compass/sprites/bootstrap-saff6d5b166.png') no-repeat;
+    background: url('img/player/bootstrap-saff6d5b166.png') no-repeat;
     left: 0;
     position: absolute;
     top: 0;
@@ -198,7 +214,7 @@ table.results-table tbody tr td ul li.releaseDate{
     width: 64px;
 }
 .play-bg {
-    background: url('http://cdn-files.deezer.com/images/compass/sprites/bootstrap-saff6d5b166.png') no-repeat;
+    background: url('img/player/bootstrap-saff6d5b166.png') no-repeat;
     display: block;
     opacity: .6;
     background-position: -61px -455px;

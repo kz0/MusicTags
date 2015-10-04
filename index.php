@@ -1,52 +1,26 @@
 <?php define('WEBROOT', str_replace('index.php', '', $_SERVER['SCRIPT_NAME'])); ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!DOCTYPE html>
+<html lang="en">
     <head>
-        <title>Music Tags</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-        <meta http-equiv="Cache-Control" content="Public">
+        <title>Music Tags | HD covers from iTunes and Spotify APIs</title>
+        <meta charset="UTF-8">
         <meta name="description" content="Find music tags and high-definition covers from the iTunes and Spotify APIs.">
         <link charset="utf-8" rel="stylesheet" type="text/css" href="style.css">
+        <link rel="icon" href="img/favicon.ico" />
         <script src="//code.jquery.com/jquery-1.10.2.js"></script>
         <script src="js/jquery.inview.min.js"></script>
     </head>
     <body>
-        <a href="<?php echo WEBROOT ?>"><h1>Music Tags</h1></a>
-        <form method="GET" action="" class="searchbar">
-            <input class="text-sb" type="text" name="search" value="<?php echo isset($_GET['search']) ? $_GET['search'] : '' ?>" placeholder="Search an artist, an album or a song title">
-            <select name="type">
-                <option value="song" <?php if (isset($_GET['type']) and $_GET['type']=="song") echo 'selected' ?>>Song</option>
-                <option value="album" <?php if (isset($_GET['type']) and $_GET['type']=="album") echo 'selected' ?>>Album</option>
-            </select>
-            <select name="country">
-                <option value="fr" <?php if (isset($_GET['country']) and $_GET['country']=="fr") echo 'selected' ?>>France</option>
-                <option value="de" <?php if (isset($_GET['country']) and $_GET['country']=="de") echo 'selected' ?>>Germany</option>
-                <option value="it" <?php if (isset($_GET['country']) and $_GET['country']=="it") echo 'selected' ?>>Italy</option>
-                <option value="jp" <?php if (isset($_GET['country']) and $_GET['country']=="jp") echo 'selected' ?>>Japan</option>
-                <option value="es" <?php if (isset($_GET['country']) and $_GET['country']=="es") echo 'selected' ?>>Spain</option>
-                <option value="gb" <?php if (isset($_GET['country']) and $_GET['country']=="gb") echo 'selected' ?>> United Kingdom</option>
-                <option value="us" <?php if (!isset($_GET['country']) or (isset($_GET['country']) and $_GET['country']=="us")) echo 'selected' ?>> United States</option>
-            </select>
-            <select name="limit">
-                <option value="20" <?php if (isset($_GET['limit']) and $_GET['limit']=="20") echo 'selected' ?>>Limit : 20</option>
-                <option value="50" <?php if (isset($_GET['limit']) and $_GET['limit']=="50") echo 'selected' ?>>Limit : 50</option>
-                <option value="100" <?php if (isset($_GET['limit']) and $_GET['limit']=="100") echo 'selected' ?>>Limit : 100</option>
-                <option value="200" <?php if (isset($_GET['limit']) and $_GET['limit']=="200") echo 'selected' ?>>Limit : 200</option>
-            </select>
-            <select name="source">
-                <option value="iTunes" <?php if (isset($_GET['source']) and $_GET['source']=="iTunes") echo 'selected' ?>>iTunes</option>
-                <option value="Spotify" <?php if (isset($_GET['source']) and $_GET['source']=="Spotify") echo 'selected' ?>>Spotify</option>
-            </select>
-            <input class="button-sb" type="submit" value="Go !">
-        </form>
+        <a class="title" href="<?php echo WEBROOT ?>"><h1>Music Tags</h1></a>
+        <hr>
         <?php
         $is_song = false;
-        if (isset($_GET['search'])) {
+        if (isset($_GET['search']) and !empty($_GET['search'])) {
             $term = $_GET['search'];
             if (isset($_GET['country'])) {
                 $country = $_GET['country'];
             } else {
-                $country = "fr";
+                $country = "us";
             }
             if (isset($_GET['limit'])) {
                 $limit = $_GET['limit'];
@@ -92,12 +66,6 @@
                 }
             }
         }
-        else {
-            $term = "";
-            $type = "";
-            $country = "";
-            $limit = "";
-        }
         if (isset($_GET['search']) and !empty($_GET['search'])) {
             $term = str_replace(" ", "%20", $term);
             if ($source == "iTunes") {
@@ -116,15 +84,8 @@
             }
             $json = file_get_contents($url);
             $parsed_json = json_decode($json);
-        ?>
-        <table class="results-table">
-            <thead>
-                <tr class="table-row">
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                if ($source == "iTunes") {
+
+            if ($source == "iTunes") {
                     if ($type == "song") {
                         $is_song = true;
                         $audio_format = "mp4";
@@ -140,6 +101,7 @@
                         $o->artwork->{'400x400'} = str_replace("100x100", "400x400", $o->artworkUrl100);
                         $o->artwork->{'600x600'} = str_replace("100x100", "600x600", $o->artworkUrl100);
                         $o->artwork->{'1200x1200'} = str_replace("100x100", "1200x1200", $o->artworkUrl100);
+                        $o->artwork->{'Original'} = str_replace("100x100", "100000x100000", $o->artworkUrl100);
                     }
                 }
                 else if ($source = "Spotify") {
@@ -206,7 +168,58 @@
                         $value = $parsed_json->artists;
                     }
                 }
-                foreach ($value as $i => $value) { ?>
+        }
+        else {
+            $term = "";
+            $type = "";
+            $country = "";
+            $limit = "";
+        }
+        ?>
+        <form method="GET" action="" class="searchbar">
+            <input class="text-sb" type="text" name="search" value="<?php
+            if (isset($_GET['searchMode']) and $_GET['searchMode'] == 'id' and isset($value[0])) {
+                echo $value[0]->artistName;
+                if (isset($_GET['type']) and $_GET['type'] == "song")
+                    echo ' - ' . $value[0]->collectionCensoredName;
+            }
+            else {
+                echo isset($_GET['search']) ? $_GET['search'] : '';
+            }
+            ?>" placeholder="Search for artist, album, song...">
+            <select name="type">
+                <option value="song" <?php if (isset($_GET['type']) and $_GET['type']=="song") echo 'selected' ?>>Song</option>
+                <option value="album" <?php if (isset($_GET['type']) and $_GET['type']=="album") echo 'selected' ?>>Album</option>
+            </select>
+            <select name="country">
+                <option value="fr" <?php if (isset($_GET['country']) and $_GET['country']=="fr") echo 'selected' ?>>France</option>
+                <option value="de" <?php if (isset($_GET['country']) and $_GET['country']=="de") echo 'selected' ?>>Germany</option>
+                <option value="it" <?php if (isset($_GET['country']) and $_GET['country']=="it") echo 'selected' ?>>Italy</option>
+                <option value="jp" <?php if (isset($_GET['country']) and $_GET['country']=="jp") echo 'selected' ?>>Japan</option>
+                <option value="es" <?php if (isset($_GET['country']) and $_GET['country']=="es") echo 'selected' ?>>Spain</option>
+                <option value="gb" <?php if (isset($_GET['country']) and $_GET['country']=="gb") echo 'selected' ?>> United Kingdom</option>
+                <option value="us" <?php if (!isset($_GET['country']) or (isset($_GET['country']) and $_GET['country']=="us")) echo 'selected' ?>> United States</option>
+            </select>
+            <select name="limit">
+                <option value="20" <?php if (isset($_GET['limit']) and $_GET['limit']=="20") echo 'selected' ?>>Limit : 20</option>
+                <option value="50" <?php if (isset($_GET['limit']) and $_GET['limit']=="50") echo 'selected' ?>>Limit : 50</option>
+                <option value="100" <?php if (isset($_GET['limit']) and $_GET['limit']=="100") echo 'selected' ?>>Limit : 100</option>
+                <option value="200" <?php if (isset($_GET['limit']) and $_GET['limit']=="200") echo 'selected' ?>>Limit : 200</option>
+            </select>
+            <select name="source">
+                <option value="iTunes" <?php if (isset($_GET['source']) and $_GET['source']=="iTunes") echo 'selected' ?>>iTunes</option>
+                <option value="Spotify" <?php if (isset($_GET['source']) and $_GET['source']=="Spotify") echo 'selected' ?>>Spotify</option>
+            </select>
+            <input class="button-sb" type="submit" value="Go !">
+        </form>
+        <?php if (isset($_GET['search']) and !empty($_GET['search'])) { ?>
+        <table class="results-table">
+            <thead>
+                <tr class="table-row">
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($value as $i => $value) { ?>
                 <tr class="table-row i<?php echo $i%2 ?>">
                 <td class="artwork flexible-col">
                     <img alt="<?php echo $value->collectionCensoredName ?>, <?php echo $value->artistName ?>" class="artwork" src="<?php echo str_replace("100x100", "200x200", $value->artworkUrl100) ?>">
@@ -259,7 +272,7 @@
         </table>
         <?php }
         else { ?>
-        <h3 class="welcome_message">Enter an artist, an album or a song title to find the tags.</h3>
+        <h3 class="welcome_message">Search for an artist, an album or a song title and find tags and high-definition covers.</h3>
         <?php } ?>
         <script>
             $('.table-row').bind('inview', function(event, visible) {
