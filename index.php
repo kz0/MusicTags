@@ -2,12 +2,12 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Music Tags | HD covers from iTunes and Spotify APIs</title>
+        <title>Music Tags - Find covers from iTunes and Spotify</title>
         <meta charset="UTF-8">
         <meta name="description" content="Find music tags and high-definition covers from the iTunes and Spotify APIs.">
         <link charset="utf-8" rel="stylesheet" type="text/css" href="style.css">
         <link rel="icon" href="img/favicon.ico" />
-        <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+        <script src="js/jquery-1.12.1.min.js"></script>
         <script src="js/jquery.inview.min.js"></script>
     </head>
     <body>
@@ -101,7 +101,7 @@
                         $o->artwork->{'400x400'} = str_replace("100x100", "400x400", $o->artworkUrl100);
                         $o->artwork->{'600x600'} = str_replace("100x100", "600x600", $o->artworkUrl100);
                         $o->artwork->{'1200x1200'} = str_replace("100x100", "1200x1200", $o->artworkUrl100);
-                        $o->artwork->{'Original'} = str_replace("100x100", "100000x100000", $o->artworkUrl100);
+                        $o->artwork->{'Original'} = str_replace("100x100", "10000x10000", $o->artworkUrl100);
                     }
                 }
                 else if ($source = "Spotify") {
@@ -180,7 +180,7 @@
             <input class="text-sb" type="text" name="search" value="<?php
             if (isset($_GET['searchMode']) and $_GET['searchMode'] == 'id' and isset($value[0])) {
                 echo $value[0]->artistName;
-                if (isset($_GET['type']) and $_GET['type'] == "song")
+                if (isset($_GET['type']) and $_GET['type'] == "song" and (sizeof($value) <= 1 or ($value[0]->collectionCensoredName == $value[1]->collectionCensoredName) and $value[0]->trackNumber == 1 and $value[1]->trackNumber == 2))
                     echo ' - ' . $value[0]->collectionCensoredName;
             }
             else {
